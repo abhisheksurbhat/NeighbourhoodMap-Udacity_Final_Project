@@ -1,54 +1,64 @@
 {
     "places": [
         {
+            "id": "1",
             "name": "Bangalore Palace",
             "location": { "lat": 12.9987, "lng": 77.5920},
-            "image": "./images/1.jpg"
+            "image": "../data/images/1.jpg"
         },
         {
+            "id": "2",
             "name": "Cubbon Park",
             "location": { "lat": 12.9763, "lng": 77.5929},
-            "image": "./images/2.jpg"
+            "image": "../data/images/2.jpg"
         },
         {
+            "id": "3",
             "name": "Lal Bagh",
             "location": { "lat": 12.9507, "lng": 77.5848},
-            "image": "./images/3.jpg"
+            "image": "../data/images/3.jpg"
         },
         {
+            "id": "4",
             "name": "M G Road",
             "location": { "lat": 12.973801, "lng": 77.611885},
-            "image": "./images/4.jpg"
+            "image": "../data/images/4.jpg"
         },
         {
+            "id": "5",
             "name": "Bannerghatta National Park",
             "location": { "lat": 12.8003, "lng": 77.5770},
-            "image": "./images/5.jpg"
+            "image": "../data/images/5.jpg"
         },
         {
+            "id": "6",
             "name": "ISKCON Temple",
             "location": { "lat": 13.0098, "lng": 77.5511},
-            "image": "./images/6.jpg"
+            "image": "../data/images/6.jpg"
         },
         {
+            "id": "7",
             "name": "Vidhana Soudha",
             "location": { "lat": 12.9795, "lng": 77.5909},
-            "image": "./images/7.jpg"
+            "image": "../data/images/7.jpg"
         },
         {
+            "id": "8",
             "name": "Kempegowda Bus Station",
             "location": { "lat": 12.9778, "lng": 77.5728},
-            "image": "./images/8.jpg"
+            "image": "../data/images/8.jpg"
         },
         {
+            "id": "9",
             "name": "Bull Temple",
             "location": { "lat": 12.9429, "lng": 77.5682},
-            "image": "./images/9.jpg"
+            "image": "../data/images/9.jpg"
         },
         {
+            "id": "10",
             "name": "Bangalore Fort",
             "location": { "lat": 12.9629, "lng": 77.5760},
-            "image": "./images/10.jpg"
+            "image": "../data/images/10.jpg"
         }
     ]
 }

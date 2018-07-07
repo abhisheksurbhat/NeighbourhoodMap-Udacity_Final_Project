@@ -1,19 +1,33 @@
 import React, { Component } from 'react';
 import Map  from './components/mymap.js';
 import './App.css';
-import { places } from './data/places.json'
+import places from './data/places.json'
 
-export class App extends Component {
+class App extends Component {
   
   render() {
-    console.log(places[0]);
     return (
+      <div className="container">
+      <div className="options-box">
+        <h1>Available Places</h1>
+        <div>
+          <input id="show-listings" type="button" value="Show Listings" />
+          <input id="hide-listings" type="button" value="Hide Listings" />
+        </div>
+        <div>
+          <ol>
+            {places.places.map((place) => (
+              <option key={place.id}>
+                {place.name}
+              </option>
+            ))}
+          </ol>  
+        </div>
+      </div>
       <Map
-      googleMapURL= "https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
-      loadingElement={<div style={{ height: '100%' }} />}
-      containerElement={<div style={{ height: 'calc(100vh - 80px)'}} />}
-      mapElement={<div style={{ height: '100%' }} />}
+        places={places}
       />
+      </div>
     );
   }
 }
