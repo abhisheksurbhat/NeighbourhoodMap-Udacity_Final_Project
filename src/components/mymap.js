@@ -29,7 +29,9 @@ class Map extends Component {
             center: {lat: 12.9716 , lng: 77.5946},
             zoom: 11
         });
-        let infoWindow = new window.google.maps.InfoWindow();
+        let infoWindow = new window.google.maps.InfoWindow({
+            maxWidth: 200
+        });
         let bounds = new window.google.maps.LatLngBounds();
         let markers = [];
         let defaultIcon = this.makeMarkerIcon('ff0000');
@@ -48,9 +50,8 @@ class Map extends Component {
             markers.push(marker);
             marker.addListener('click', function() {
                 if (infoWindow.marker !== marker) {
-                    console.log(places.places[i].title);
                     infoWindow.marker = marker;
-                    infoWindow.setContent('<div>'+places.places[i].name+'</div>');
+                    infoWindow.setContent("<div>"+places.places[i].name+"</div>");
                     infoWindow.open(map, marker);
                     infoWindow.addListener('closeclick',function(){
                       infoWindow.setMarker = null;
@@ -73,7 +74,7 @@ class Map extends Component {
 
     componentDidMount() {
         window.initMap = this.initMap;
-        loadJS('https://maps.googleapis.com/maps/api/js?key=AIzaSyDJIkg-D6_7_ApII3saQM5_KPv2wSR2lks&v=3&callback=initMap')
+        loadGoogleMap('https://maps.googleapis.com/maps/api/js?key=AIzaSyDJIkg-D6_7_ApII3saQM5_KPv2wSR2lks&v=3&callback=initMap')
     }
 
     render() {
@@ -84,7 +85,7 @@ class Map extends Component {
     }
     
 }
-function loadJS(src) {
+function loadGoogleMap(src) {
     var body = document.querySelector('body');
     var script = window.document.createElement("script");
     script.src = src;
