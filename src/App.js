@@ -3,7 +3,6 @@ import Map  from './components/mymap.js';
 import './App.css';
 import places from './data/places.json'
 import escapeRegExp from 'escape-string-regexp';
-// import sortBy from 'sort-by';
 
 class App extends Component {
 
@@ -28,14 +27,32 @@ class App extends Component {
   selectMarker = (props) => {
     let finalDiv = this.state.optionsBox;
     let elementToColor = {};
-    finalDiv.forEach(element => {
-      if(element.innerText === props.name) {
-        elementToColor = element;
-      }
-    });
-    elementToColor.style.background = '#0e1553';
-    this.state.placesToMark.push(props);
-    console.log(this.state.placesToMark);
+    if(!props.marked) {
+      props.marked = true; 
+      finalDiv.forEach(element => {
+        if(element.innerText === props.name) {
+          elementToColor = element;
+        }
+      });
+      elementToColor.style.background = '#0e1553';
+      elementToColor.style.color = '#ffffff';
+      this.state.placesToMark.push(props);
+    }
+    else {
+      props.marked = false;
+      finalDiv.forEach(element => {
+        if(element.innerText === props.name) {
+          elementToColor = element;
+        }
+      });
+      elementToColor.style.background = '#ffffff';
+      elementToColor.style.color = '#000000';
+      this.state.placesToMark.pop(props);
+    }
+  }
+
+  callChange = () => {
+    this.forceUpdate();
   }
 
   render() {
@@ -44,18 +61,21 @@ class App extends Component {
       <div className="options-box">
         <h1>Bangalore Tourist Guide</h1>
         <div>
-          <input id="show-listings" type="text" onChange={this.search}/>
+          <input id="list-places" placeholder="Filter places to your choice" type="text" onChange={this.search}/>
         </div>
+        <p className="helper-text">Click on the places you want to see</p>
         <ul>
             {this.state.finalPlaces.map((place) => (
-              <li className="options" id={place.id} key={place.id} onClick={() => this.selectMarker(place)}>
+              <li className="options" key={place.id} onClick={() => this.selectMarker(place)}>
                 <a>{place.name}</a>
               </li>
             ))}
         </ul>
+        <button className="end-button" onClick={this.callChange}>Click to show selected locations</button>
       </div>
       <Map
-        places={places}
+        places={this.state.finalPlaces}
+        markersToShow={this.state.placesToMark}
       />
       </div>
     );

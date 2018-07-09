@@ -12,6 +12,12 @@ class Map extends Component {
         }
     }
 
+
+
+    // callThis = () => {
+    //     console.log("All is well");
+    // }
+
     makeMarkerIcon = (color) => {
         var markerImage = new window.google.maps.MarkerImage(
             'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ color +
@@ -37,21 +43,22 @@ class Map extends Component {
         let defaultIcon = this.makeMarkerIcon('ff0000');
         let highlightedIcon = this.makeMarkerIcon('FFFF24');
         let clickedIcon = this.makeMarkerIcon('0091ff');
-        for(let i=0; i<places.places.length; i++) {
+        for(let i=0; i<places.length; i++) {
 
             let marker = new window.google.maps.Marker({ 
                 map: map,
-                position: places.places[i].location,
-                title: places.places[i].name,
+                position: places[i].location,
+                title: places[i].name,
                 animation: window.google.maps.Animation.DROP,
                 icon: defaultIcon,
-                id: places.places[i].id
+                id: places[i].id,
+                visible: true
             });
             markers.push(marker);
             marker.addListener('click', function() {
                 if (infoWindow.marker !== marker) {
                     infoWindow.marker = marker;
-                    infoWindow.setContent("<div>"+places.places[i].name+"</div>");
+                    infoWindow.setContent("<div>"+places[i].name+"</div>");
                     infoWindow.open(map, marker);
                     infoWindow.addListener('closeclick',function(){
                       infoWindow.setMarker = null;
@@ -68,19 +75,38 @@ class Map extends Component {
             bounds.extend(markers[i].position);
         }
         map.fitBounds(bounds);
-        this.setState({ myMap: map });
+        this.setState({ myMap: map, markers: markers });
 
     }
 
     componentDidMount() {
         window.initMap = this.initMap;
-        loadGoogleMap('https://maps.googleapis.com/maps/api/js?key=AIzaSyDJIkg-D6_7_ApII3saQM5_KPv2wSR2lks&v=3&callback=initMap')
+        loadGoogleMap('https://maps.googleapis.com/maps/api/js?key=AIzaSyDJIkg-D6_7_ApII3saQM5_KPv2wSR2lks&v=3&callback=initMap');
+    }
+
+    updateMarkers = () => {
+        for(let i=0; i<this.state.markers.length; i++) {
+            for(let j=0; j<this.props.markersToShow.length; j++) {
+                let marker = this.state.markers[i];
+                let selected = this.props.markersToShow[j];
+                if(marker.title === selected.name) {
+                    marker.setMap(this.state.myMap);
+                    break;
+                }
+                else {
+                    marker.setMap(null);
+                }
+            }
+        }
+    }
+
+    componentDidUpdate() {
+        this.updateMarkers();
     }
 
     render() {
         return (
-            <div id='map'></div>
-        
+            <div id='map'></div>       
         )
     }
     
@@ -91,9 +117,6 @@ function loadGoogleMap(src) {
     script.src = src;
     script.async = true;
     script.defer = true;
-    script.onerror = function() {
-        document.write("Google Maps can't be loaded");
-    };
     body.appendChild(script);
 }
 export default Map
