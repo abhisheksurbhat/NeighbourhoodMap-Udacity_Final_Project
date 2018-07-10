@@ -12,11 +12,13 @@ class App extends Component {
     placesToMark: []
   }
 
+  //Fetch all the places at initialization.
   componentDidMount() {
     let divInHand = document.querySelectorAll('.options');
     this.setState({optionsBox: divInHand});
   }
 
+  //Search for query to filter out places.
   search = (input) => {
     let query = input.target.value;
     const match = new RegExp(escapeRegExp(query), 'i');
@@ -24,6 +26,8 @@ class App extends Component {
     this.setState({finalPlaces: results});
   }
 
+  //Function called when a location is clicked on. The location is added to the
+  //places to be displayed and div style elements are changed up a bit.
   selectMarker = (props) => {
     let finalDiv = this.state.optionsBox;
     let elementToColor = {};
@@ -51,6 +55,8 @@ class App extends Component {
     }
   }
 
+  //Called every time the end-button is clicked. forceUpdate is to ensure updated
+  //list of markers is displayed.
   callChange = () => {
     this.forceUpdate();
   }
@@ -61,19 +67,19 @@ class App extends Component {
       <div className="options-box">
         <h1>Bangalore Tourist Guide</h1>
         <div>
-          <input id="list-places" placeholder="Filter places to your choice" type="text" onChange={this.search}/>
+          <input id="list-places" tabIndex="1" placeholder="Filter places to your choice" type="text" onChange={this.search}/>
         </div>
         <p className="helper-text">Click on the places you want to see</p>
         <ul>
             {this.state.finalPlaces.map((place) => (
-              <li className="options" key={place.id} onClick={() => this.selectMarker(place)}>
+              <li className="options" key={place.id} tabIndex="0" onClick={() => this.selectMarker(place)} onKeyPress={() => this.selectMarker(place)}>
                 <a>{place.name}</a>
               </li>
             ))}
         </ul>
         <button className="end-button" onClick={this.callChange}>Click to show selected locations</button>
       </div>
-      <Map
+      <Map tabIndex="-1"
         places={this.state.finalPlaces}
         markersToShow={this.state.placesToMark}
       />

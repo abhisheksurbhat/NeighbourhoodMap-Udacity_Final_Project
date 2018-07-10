@@ -13,7 +13,7 @@ class Map extends Component {
         url: ""
     }
 
-
+    //Makes a marker icon at any colour given.
     makeMarkerIcon = (color) => {
         var markerImage = new window.google.maps.MarkerImage(
             'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ color +
@@ -25,6 +25,7 @@ class Map extends Component {
           return markerImage;
     }
 
+    //Initializes map, it's markers and InfoWindows. Also calls Wikipedia API to fill up InfoWindow.
     initMap = () => {
         let places = this.props.places;
         let searchResult = '';
@@ -42,6 +43,7 @@ class Map extends Component {
         let clickedIcon = this.makeMarkerIcon('0091ff');
         for(let i=0; i<places.length; i++) {
 
+            //New marker created here. Set to visible by default.
             let marker = new window.google.maps.Marker({ 
                 map: map,
                 position: places[i].location,
@@ -52,6 +54,8 @@ class Map extends Component {
                 visible: true
             });
             markers.push(marker);
+
+            //Here, infoWindow is generated. Wikipedia API is used as third-party API.
             marker.addListener('click', function() {
                 if (infoWindow.marker !== marker) {
                     infoWindow.marker = marker;
@@ -67,7 +71,7 @@ class Map extends Component {
                     }).then(function(res) {
                         res[2].forEach(element => {
                             searchResult = element;
-                            console.log(searchResult);
+                            // console.log(searchResult);
                             infoWindow.setContent("<div>"+searchResult+"</div>");
                         });
                     })
@@ -92,12 +96,13 @@ class Map extends Component {
 
     }
 
+    //Runs map initialization code as soon as component mounts.
     componentDidMount() {
-        this.setState({url: "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&exintro&origin=*&search="});
         window.initMap = this.initMap;
         loadGoogleMap('https://maps.googleapis.com/maps/api/js?key=AIzaSyDJIkg-D6_7_ApII3saQM5_KPv2wSR2lks&v=3&callback=initMap');
     }
 
+    //Function to show only filtered markers.
     updateMarkers = () => {
         for(let i=0; i<this.state.markers.length; i++) {
             for(let j=0; j<this.props.markersToShow.length; j++) {
@@ -114,6 +119,7 @@ class Map extends Component {
         }
     }
 
+    //Call function to update markers every time component is updated, ie new set of components is obtained.
     componentDidUpdate() {
         this.updateMarkers();
     }
@@ -122,9 +128,10 @@ class Map extends Component {
         return (
             <div id='map'></div>       
         )
-    }
-    
+    }    
 }
+
+//Basic function to load map asynchronously.
 function loadGoogleMap(src) {
     var body = document.querySelector('body');
     var script = window.document.createElement("script");
