@@ -9,14 +9,10 @@ class Map extends Component {
         style: {
             height: 665,
             left: 300
-        }
+        },
+        url: ""
     }
 
-
-
-    // callThis = () => {
-    //     console.log("All is well");
-    // }
 
     makeMarkerIcon = (color) => {
         var markerImage = new window.google.maps.MarkerImage(
@@ -31,6 +27,7 @@ class Map extends Component {
 
     initMap = () => {
         let places = this.props.places;
+        let searchResult = '';
         let map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: 12.9716 , lng: 77.5946},
             zoom: 11
@@ -58,7 +55,23 @@ class Map extends Component {
             marker.addListener('click', function() {
                 if (infoWindow.marker !== marker) {
                     infoWindow.marker = marker;
-                    infoWindow.setContent("<div>"+places[i].name+"</div>");
+                    fetch("https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&exintro&origin=*&search="+places[i].searchString+"&format=json", {
+                        method: 'GET',
+                        headers: new Headers({
+                            'Api-User-Agent': 'Example/1.0'
+                        })
+                    }).then(function(response) {
+                        if(response.ok) {
+                            return response.json();
+                        }
+                    }).then(function(res) {
+                        res[2].forEach(element => {
+                            searchResult = element;
+                            console.log(searchResult);
+                            infoWindow.setContent("<div>"+searchResult+"</div>");
+                        });
+                    })
+                    
                     infoWindow.open(map, marker);
                     infoWindow.addListener('closeclick',function(){
                       infoWindow.setMarker = null;
@@ -80,6 +93,7 @@ class Map extends Component {
     }
 
     componentDidMount() {
+        this.setState({url: "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&exintro&origin=*&search="});
         window.initMap = this.initMap;
         loadGoogleMap('https://maps.googleapis.com/maps/api/js?key=AIzaSyDJIkg-D6_7_ApII3saQM5_KPv2wSR2lks&v=3&callback=initMap');
     }
