@@ -16,7 +16,7 @@ To use this app, follow these instructions:
 
 1. Download or clone the github repo into your local machine.
 2. Change directory to the repo.
-3. Open a terminal onto the directory and run npm install, then run npm install --save escape-string-regexp.
+3. Open a terminal onto the directory and run npm install.
 4. Run npm start.
 5. Open https://localhost:3000 when the app is running to use the application.
 
