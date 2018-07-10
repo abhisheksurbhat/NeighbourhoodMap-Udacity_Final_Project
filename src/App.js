@@ -61,13 +61,39 @@ class App extends Component {
     this.forceUpdate();
   }
 
+  //Added hamburger functionality
+  toggleHam = () => {
+    let menu = document.querySelector('.options-box');
+    let burger = document.querySelector('.burger-icon');
+    let fullThing = document.querySelector('.side-content');
+    if(menu.style.visibility==="hidden") {
+      menu.style.visibility="visible";
+      burger.style.background = "#c9c6c6";
+      burger.style.width = "320px";
+      burger.style.height = "20px";
+    }
+    else {
+      menu.style.visibility="hidden";
+      fullThing.style.width="37px";
+      burger.style.width="37px";
+    }
+	}
+
   render() {
     return (
       <div className="container">
+      <div className="side-content">
+      <div className="burger-icon">
+					<a className="transition" tabIndex="1" onClick={this.toggleHam}>
+						<div className="hamburger"></div>
+						<div className="hamburger"></div>
+						<div className="hamburger"></div>
+					</a>	
+				</div>
       <div className="options-box">
         <h1>Bangalore Tourist Guide</h1>
         <div>
-          <input id="list-places" tabIndex="1" placeholder="Filter places to your choice" type="text" onChange={this.search}/>
+          <input id="list-places" tabIndex="2" placeholder="Filter places to your choice" type="text" onChange={this.search}/>
         </div>
         <p className="helper-text">Click on the places you want to see</p>
         <ul>
@@ -78,6 +104,7 @@ class App extends Component {
             ))}
         </ul>
         <button className="end-button" onClick={this.callChange}>Click to show selected locations</button>
+      </div>
       </div>
       <Map tabIndex="-1"
         places={this.state.finalPlaces}
