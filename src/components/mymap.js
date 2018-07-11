@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import '../App.css'
 
+window.gm_authFailure = () => {
+    alert("Authentication failure. Your key is invalid!");
+}
+
 class Map extends Component {
 
     state = {
@@ -72,10 +76,11 @@ class Map extends Component {
                         res[2].forEach(element => {
                             searchResult = element;
                             // console.log(searchResult);
-                            infoWindow.setContent("<div>"+searchResult+"</div>");
+                            infoWindow.setContent("<div>"+searchResult+"</div><br/><div>Source:Wikipedia</div>");
                         });
-                    })
-                    
+                    }).catch(err => {
+                        infoWindow.setContent("<div style='text-align:center;'>There was a problem with the Wiki App :(<br />Please try again later.");
+                    });
                     infoWindow.open(map, marker);
                     infoWindow.addListener('closeclick',function(){
                       infoWindow.setMarker = null;
@@ -122,6 +127,16 @@ class Map extends Component {
     //Call function to update markers every time component is updated, ie new set of components is obtained.
     componentDidUpdate() {
         this.updateMarkers();
+        if(this.props.clickedMarker.length !== 0) {
+            this.state.markers.forEach(mapMarker => {
+                if(mapMarker.title === this.props.clickedMarker.name) {
+                    new window.google.maps.event.trigger(mapMarker, 'click');
+                }
+                else {
+                    new window.google.maps.event.trigger(mapMarker, 'mouseout');
+                }
+            })
+        }
     }
 
     render() {
@@ -133,11 +148,13 @@ class Map extends Component {
 
 //Basic function to load map asynchronously.
 function loadGoogleMap(src) {
-    var body = document.querySelector('body');
-    var script = window.document.createElement("script");
+    let body = document.querySelector('body');
+    let script = window.document.createElement("script");
     script.src = src;
     script.async = true;
-    script.defer = true;
+    script.onerror = function() {
+        alert("Sorry! Map can't load at the moment.");
+    }
     body.appendChild(script);
 }
 export default Map

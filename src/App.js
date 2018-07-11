@@ -9,7 +9,8 @@ class App extends Component {
   state = {
     finalPlaces: places.places,
     optionsBox: {},
-    placesToMark: []
+    placesToMark: [],
+    clickedMarker: []
   }
 
   //Fetch all the places at initialization.
@@ -24,35 +25,15 @@ class App extends Component {
     const match = new RegExp(escapeRegExp(query), 'i');
     let results =  places.places.filter((place) => match.test(place.name));
     this.setState({finalPlaces: results});
+    this.setState({placesToMark: results});
+    this.forceUpdate();
   }
 
   //Function called when a location is clicked on. The location is added to the
   //places to be displayed and div style elements are changed up a bit.
   selectMarker = (props) => {
-    let finalDiv = this.state.optionsBox;
-    let elementToColor = {};
-    if(!props.marked) {
-      props.marked = true; 
-      finalDiv.forEach(element => {
-        if(element.innerText === props.name) {
-          elementToColor = element;
-        }
-      });
-      elementToColor.style.background = '#0e1553';
-      elementToColor.style.color = '#ffffff';
-      this.state.placesToMark.push(props);
-    }
-    else {
-      props.marked = false;
-      finalDiv.forEach(element => {
-        if(element.innerText === props.name) {
-          elementToColor = element;
-        }
-      });
-      elementToColor.style.background = '#ffffff';
-      elementToColor.style.color = '#000000';
-      this.state.placesToMark.pop(props);
-    }
+    this.setState({clickedMarker: props});
+    this.forceUpdate();
   }
 
   //Called every time the end-button is clicked. forceUpdate is to ensure updated
@@ -84,12 +65,12 @@ class App extends Component {
       <div className="container">
       <div className="side-content">
       <div className="burger-icon">
-					<a className="transition" tabIndex="1" onClick={this.toggleHam}>
+					<a className="transition" tabIndex="1" onClick={this.toggleHam} onKeyPress={this.toggleHam}>
 						<div className="hamburger"></div>
 						<div className="hamburger"></div>
 						<div className="hamburger"></div>
 					</a>	
-				</div>
+			</div>
       <div className="options-box">
         <h1>Bangalore Tourist Guide</h1>
         <div>
@@ -98,17 +79,23 @@ class App extends Component {
         <p className="helper-text">Click on the places you want to see</p>
         <ul>
             {this.state.finalPlaces.map((place) => (
-              <li className="options" key={place.id} tabIndex="0" onClick={() => this.selectMarker(place)} onKeyPress={() => this.selectMarker(place)}>
+              <li className="options" key={place.id}
+                role="listbox"
+                tabIndex="0"
+                onClick={() => this.selectMarker(place)}
+                onKeyPress={() => this.selectMarker(place)}
+                >
                 <a>{place.name}</a>
               </li>
             ))}
         </ul>
-        <button className="end-button" onClick={this.callChange}>Click to show selected locations</button>
       </div>
+      <a href="#list-places" className="goback-toinput">Go back to the input field</a>
       </div>
-      <Map tabIndex="-1"
+      <Map
         places={this.state.finalPlaces}
         markersToShow={this.state.placesToMark}
+        clickedMarker={this.state.clickedMarker}
       />
       </div>
     );
